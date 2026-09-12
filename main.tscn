@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://bqxo6khd3sljd"]
+
+[ext_resource type="Script" uid="uid://2tkf0pqpd81e" path="res://main.gd" id="1_ig7tw"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_aasrv"]
+
+[node name="Main" type="Node3D" unique_id=1134936724]
+script = ExtResource("1_ig7tw")
+
+[node name="XROrigin3D" type="XROrigin3D" parent="." unique_id=1764869479]
+
+[node name="XRCamera3D" type="XRCamera3D" parent="XROrigin3D" unique_id=723249531]
+
+[node name="cubo" type="MeshInstance3D" parent="." unique_id=911105815]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, -1)
+mesh = SubResource("BoxMesh_aasrv")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1675205275]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=74520359]
+
+[node name="BotonAR" type="Button" parent="CanvasLayer" unique_id=939111255]
+offset_right = 8.0
+offset_bottom = 8.0

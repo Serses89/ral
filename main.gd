@@ -5,6 +5,7 @@ extends Node3D
 @onready var origen: XROrigin3D = $XROrigin3D
 @onready var cubo: RigidBody3D = $cubo2
 @onready var piso_body: StaticBody3D = $Piso
+@onready var malla: MeshInstance3D = $cubo2/MeshInstance3D # Asume que MeshInstance3D es hijo directo de cubo2
 
 # --- Config ---
 const ALTURA_CAIDA := 0.6      # altura de caída al hacer tap en el piso
@@ -12,8 +13,16 @@ const ALCANCE_RAYO := 10.0     # hasta dónde busca el rayo del dedo
 const DIST_MIN := 0.25         # no puedes traerlo más cerca que esto
 const DIST_MAX := 3.0          # ni alejarlo más que esto
 const FUERZA_LANZAMIENTO := 1.2 # multiplicador al soltar
+const COOLDOWN_COLOR := 0.1    # Segundos entre cambios de color para evitar spam
+const SALTO_MATIZ := 0.3       # Cuánto cambia el color en el círculo cromático
+const DURACION_CAMBIO := 0.25  # Duración de la animación del color
 
 # --- Estado ---
+var material_cubo: StandardMaterial3D
+var matiz := 0.0
+var ultimo_golpe := 0.0
+var tween_color: Tween
+
 var webxr: WebXRInterface
 var altura_piso := 0.0
 
@@ -30,6 +39,13 @@ func _ready() -> void:
 	cubo.visible = false
 	cubo.freeze = true
 	cubo.freeze_mode = RigidBody3D.FREEZE_MODE_KINEMATIC
+	material_cubo = StandardMaterial3D.new()
+	material_cubo.albedo_color = Color.from_hsv(matiz, 0.85, 1.0)
+	material_cubo.emission_enabled = true
+	material_cubo.emission = material_cubo.albedo_color
+	material_cubo.emission_energy_multiplier = 0.4
+	malla.material_override = material_cubo
+	
 	cubo.contact_monitor = true
 	cubo.max_contacts_reported = 3
 	cubo.body_entered.connect(self._on_cubo_choca)
@@ -240,44 +256,24 @@ func _punto_del_tap(input_source_id: int):
 
 	return punto
 
-# =========================================================
-#  EFECTOS DE COLISIÓN 
-# =========================================================
-
-func _on_cubo_choca(body: Node) -> void:
-	print("¡CHOQUE DETECTADO! Con: ", body.name)
-	if body == piso_body:
-		print("Es el piso, cambiando color...")
-		_cambiar_color_aleatorio()
-
-
-func _cambiar_color_aleatorio() -> void:
-	# Busca el modelo 3D dentro del RigidBody. 
-	# IMPORTANTE: Asegúrate de que el nodo hijo se llame "MeshInstance3D" o cambia el nombre aquí.
-	var mesh: MeshInstance3D = cubo.get_node_or_null("MeshInstance3D")
-	if mesh == null:
-		push_warning("No se encontró un MeshInstance3D dentro del cubo.")
+func on_cubo_choco(_cuerpo: Node) -> void:
+	# filtro anti-spm: al rebotar, el cubo genera varios
+	# contantos seguidos en pocos milisegundos 
+	var ahora := Time.get_ticks_msec() / 100.0 
+	if ahora - ultimo_golpe < COOLDOWN_COLOR:
 		return
-		
-	# Obtenemos el material actual
-	var material := mesh.get_active_material(0) as StandardMaterial3D
+	ultimo_golpe = ahora
 	
-	# Nos aseguramos de tener un material único para no afectar otros objetos de la escena
-	if material == null:
-		material = StandardMaterial3D.new()
-		mesh.material_override = material
-	elif not material.resource_local_to_scene:
-		material = material.duplicate()
-		mesh.material_override = material
-		
-	# Generamos un color RGB completamente aleatorio
-	var color_nuevo = Color(randf(), randf(), randf())
+	# avanzamos en el circulo de matices (0.0 a 1.0 = todo el arcoiris)
+	matiz  = fmod(matiz + SALTO_MATIZ, 1.0)
+	var destino := Color.from_hsv(matiz, 0.85, 1.0)
 	
-	# Usamos un Tween para que el cambio de color sea suave, igual que en el video
-	var tween = get_tree().create_tween()
+	# si habia una transición en curso la cortamos
+	if tween_color and tween_color.is_valid():
+		tween_color.kill()
 	
-	# Cambia el color base en 0.25 segundos
-	tween.tween_property(material, "albedo_color", color_nuevo, 0.25)
-	
-	# Opcional: Si tu cubo tiene emisión de luz (brilla), descomenta esta línea:
-	# tween.parallel().tween_property(material, "emission", color_nuevo, 0.25)
+	tween_color = create_tween()
+	tween_color.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween_color.set_parallel(true)
+	tween_color.tween_property(material_cubo,"albedo_color", destino, DURACION_CAMBIO)
+	tween_color.tween_property(material_cubo, "emission,", destino, DURACION_CAMBIO)

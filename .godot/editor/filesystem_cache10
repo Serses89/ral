@@ -1,0 +1,14 @@
+78098b89c88a74ebe8c20117b8754620
+::res://::1789796200
+export_presets.cfg::TextFile::-1::1789796200::0::1::::<><><>0<>0<><>::
+godot-fisica.apple-touch-icon.png::CompressedTexture2D::5800805745721123281::1789761923::1789791203::1::::<><><>0<>0<>45901e33c87b81636befe39c9bf7737e<>res://.godot/imported/godot-fisica.apple-touch-icon.png-0ce8e2239815b2dbdc3c96fa52ae893f.ctex::
+godot-fisica.icon.png::CompressedTexture2D::3321457292888219297::1789761923::1789791203::1::::<><><>0<>0<>48b7e0ba2372f77213ed09b21f9526a9<>res://.godot/imported/godot-fisica.icon.png-f33f8ee2a1ba63cfcbbd4302f171d302.ctex::
+godot-fisica.png::CompressedTexture2D::2735705281493533904::1789761923::1789791203::1::::<><><>0<>0<>4fafe6dfd251ff4e645f9722235db115<>res://.godot/imported/godot-fisica.png-18c3e6271402560adb57d40e3d7cf24f.ctex::
+icon.svg::CompressedTexture2D::4011409306252185389::1789620356::1789791203::1::::<><><>0<>0<>4feb24015a3634b3a62bd5359eb90a63<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+main.gd::GDScript::2217064661619488248::1789794869::0::1::::<>Node3D<><>0<>0<><>::
+main.tscn::PackedScene::4040958140747955452::1789795982::0::1::::<><><>0<>0<><>::uid://6t7y4dtmf2ae::::res://main.gd
+new_standard_material_3d.tres::StandardMaterial3D::3869930902292684578::1789793647::0::1::::<><><>0<>0<><>::
+::res://ra-f-c/::1789796209
+index.apple-touch-icon.png::CompressedTexture2D::1464065130780051812::1789796209::1789796257::1::::<><><>0<>0<>72ece5841436a1a5f80716a9d23b619f<>res://.godot/imported/index.apple-touch-icon.png-965dfd5e0850a01ba8280c36f04b7105.ctex::
+index.icon.png::CompressedTexture2D::8746735833184882648::1789796209::1789796257::1::::<><><>0<>0<>5e808af68e506b18ce1b37ec11d07092<>res://.godot/imported/index.icon.png-a8c069e0e728ff4809d0317f3062fca7.ctex::
+index.png::CompressedTexture2D::6471712034550545029::1789796209::1789796257::1::::<><><>0<>0<>d50d9a1bcf57a74b3c40d6b96a73c6cb<>res://.godot/imported/index.png-5a83b0725b0d61fb40c75a61d25d4a99.ctex::

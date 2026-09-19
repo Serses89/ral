@@ -48,7 +48,7 @@ func _ready() -> void:
 	
 	cubo.contact_monitor = true
 	cubo.max_contacts_reported = 3
-	cubo.body_entered.connect(self._on_cubo_choca)
+	cubo.body_entered.connect(_on_cubo_choca)
 	
 	webxr = XRServer.find_interface("WebXR")
 	if webxr == null:
@@ -256,7 +256,7 @@ func _punto_del_tap(input_source_id: int):
 
 	return punto
 
-func on_cubo_choco(_cuerpo: Node) -> void:
+func _on_cubo_choca(_cuerpo: Node) -> void:
 	# filtro anti-spm: al rebotar, el cubo genera varios
 	# contantos seguidos en pocos milisegundos 
 	var ahora := Time.get_ticks_msec() / 100.0 
@@ -265,7 +265,7 @@ func on_cubo_choco(_cuerpo: Node) -> void:
 	ultimo_golpe = ahora
 	
 	# avanzamos en el circulo de matices (0.0 a 1.0 = todo el arcoiris)
-	matiz  = fmod(matiz + SALTO_MATIZ, 1.0)
+	matiz = fmod(matiz + SALTO_MATIZ, 1.0)
 	var destino := Color.from_hsv(matiz, 0.85, 1.0)
 	
 	# si habia una transición en curso la cortamos
@@ -276,4 +276,4 @@ func on_cubo_choco(_cuerpo: Node) -> void:
 	tween_color.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween_color.set_parallel(true)
 	tween_color.tween_property(material_cubo,"albedo_color", destino, DURACION_CAMBIO)
-	tween_color.tween_property(material_cubo, "emission,", destino, DURACION_CAMBIO)
+	tween_color.tween_property(material_cubo, "emission", destino, DURACION_CAMBIO)
